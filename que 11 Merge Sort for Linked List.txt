@@ -1,0 +1,115 @@
+class Solution{
+  public:
+    //Function to sort the given linked list using Merge Sort.
+    Node* getmiddle(Node* head) {
+        Node* slow = head;
+        Node* fast = head->next;
+        while (fast != NULL && fast->next != NULL) {
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        return slow;
+    }
+
+    Node* merge(Node* left, Node* right) {
+        if (left == NULL) {
+            return right;
+        }
+        if (right == NULL) {
+            return left;
+        }
+        Node* start = new Node(-1);
+        Node* temp = start;
+        while (left != NULL && right != NULL) {
+            if (left->data < right->data) {
+                temp->next = left;
+                temp = left;
+                left = left->next;
+            } else {
+                temp->next = right;
+                temp = right;
+                right = right->next;
+            }
+        }
+        while (left != NULL) {
+            temp->next = left;
+            temp = left;
+            left = left->next;
+        }
+        while (right != NULL) {
+            temp->next = right;
+            temp = right;
+            right = right->next;
+        }
+        start = start->next;
+        return start;
+    }
+
+    Node* mergeSort(Node* head) {
+        if (head == NULL || head->next == NULL) {
+            return head;
+        }
+        Node* middle = getmiddle(head);
+        Node* left = head;
+        Node* right = middle->next;
+        middle->next = NULL;
+        left = mergeSort(left);
+        right = mergeSort(right);
+        Node* ans = merge(left, right);
+        return ans;
+    }
+};
+
+
+
+
+Example:
+
+Input: head = [1,2,3,4,5]
+
+Step-by-step iteration:
+
+Initially, slow points to the head of the linked list and fast points to the node next to the head:
+
+rust
+Copy code
+1 -> 2 -> 3 -> 4 -> 5
+^         ^
+slow     fast
+In the first iteration:
+
+slow moves one step forward.
+fast moves two steps forward.
+rust
+Copy code
+1 -> 2 -> 3 -> 4 -> 5
+     ^              ^
+    slow           fast
+In the second iteration:
+
+slow moves one step forward.
+fast moves two steps forward.
+rust
+Copy code
+1 -> 2 -> 3 -> 4 -> 5
+          ^         ^
+         slow      fast
+In the third iteration:
+
+slow moves one step forward.
+fast moves two steps forward.
+rust
+Copy code
+1 -> 2 -> 3 -> 4 -> 5
+               ^      (NULL)
+              slow    
+Since fast has reached the end of the linked list, slow is now pointing to the middle node:
+
+rust
+Copy code
+1 -> 2 -> 3 -> 4 -> 5
+          ^         
+         slow      
+Therefore, the middle node of the list is node 3.
+
+So, the output is [3,4,5], as expected. Thank you for pointing out the correction.
